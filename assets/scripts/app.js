@@ -12,6 +12,30 @@ class Product {
   }
 }
 
+class ShoppingCart {
+
+  
+  
+  addProd() {
+    const cart = document.createElement('section');
+    cart.className = 'calcul m-5';
+    cart.innerHTML = `
+      <div class="card card-body py-4">
+        <div class="row py-2">
+          <div class="col-lg-8 col-sm-7">
+            <h5 class="h2">Total : \$ ${0}</h5> 
+          </div>
+          <div class="col-lg-3 col-sm-5 text-right">
+            <a href="" class="btn btn-danger px-4 ">Order Now!</a>
+          </div>
+        </div>
+      </div>
+    `;
+
+    return cart;
+  }
+}
+
 class ProductItem {
   constructor(product) {
     this.product = product;
@@ -52,8 +76,7 @@ class ProductList {
   constructor() { }
   
   addProd() {
-    const htmlId = document.getElementById("app");
-    htmlId.className = "shopping";
+    
     const prodList = document.createElement("div");
     prodList.className = "container";
     for (const prod of this.products) {
@@ -61,9 +84,24 @@ class ProductList {
       const prodId = productItem.addProd();
       prodList.append(prodId);
     }
-    htmlId.append(prodList);
+    return prodList;
+    
   }
 }
 
-const productList = new ProductList();
-productList.addProd();
+class Shop {
+  addProd() {
+    const htmlId = document.getElementById("app");
+    htmlId.className = "shopping";
+    const shop = new ShoppingCart();
+    const shopList = shop.addProd();
+    const productList = new ProductList();
+    const prodli = productList.addProd();  
+    htmlId.parentNode.insertBefore(shopList, htmlId);
+    htmlId.append(prodli);
+  }
+}
+
+const shop = new Shop();
+shop.addProd();
+
