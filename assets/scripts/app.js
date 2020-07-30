@@ -13,9 +13,23 @@ class Product {
 }
 
 class ShoppingCart {
+  items = [];
 
-  
-  
+  set cartCalcul(val) {
+    this.items = val;
+    
+  }
+
+  get totalCal() {
+    const sum = this.items.reduce((prev, current) => prev + current.price, 0);
+    return sum;
+  }
+
+  addProduct(product) {
+    this.items.push(product);
+    this.total.innerHTML = `<h5 class="h2">Total : \$ ${this.totalCal}</h5>`;
+  }
+
   addProd() {
     const cart = document.createElement('section');
     cart.className = 'calcul m-5';
@@ -31,7 +45,7 @@ class ShoppingCart {
         </div>
       </div>
     `;
-
+    this.total = cart.querySelector('h5');
     return cart;
   }
 }
@@ -41,6 +55,10 @@ class ProductItem {
     this.product = product;
   }
 
+  addToCart() {
+    App.addProductToCart(this.product);
+  }
+
   addProd() {
     const product = document.createElement("div");
     product.className = "card mx-auto bg-light shadow mb-4";
@@ -48,11 +66,13 @@ class ProductItem {
       <img src="${this.product.imageUrl}" alt="${this.product.title}" class="card-img-top img-fluid " >
       <div class="card-body text-center">
         <h2>${this.product.title}</h2>
-        <h5>${this.product.price}</h5>
+        <h5>\$ ${this.product.price}</h5>
         <p class="lead">${this.product.description}</p>
-        <div class="btn btn-success">Add to Cart</div>
+        <button class="btn btn-success">Add to Cart</button>
       </div>
     `;
+    const addCartButton = product.querySelector('button');
+    addCartButton.addEventListener('click', this.addToCart.bind(this));
     return product;
   }
 }
@@ -73,10 +93,9 @@ class ProductList {
     )
   ];
 
-  constructor() { }
+  constructor() {}
   
   addProd() {
-    
     const prodList = document.createElement("div");
     prodList.className = "container";
     for (const prod of this.products) {
@@ -85,7 +104,6 @@ class ProductList {
       prodList.append(prodId);
     }
     return prodList;
-    
   }
 }
 
@@ -93,8 +111,8 @@ class Shop {
   addProd() {
     const htmlId = document.getElementById("app");
     htmlId.className = "shopping";
-    const shop = new ShoppingCart();
-    const shopList = shop.addProd();
+    this.shopp = new ShoppingCart();
+    const shopList = this.shopp.addProd();
     const productList = new ProductList();
     const prodli = productList.addProd();  
     htmlId.parentNode.insertBefore(shopList, htmlId);
@@ -102,6 +120,17 @@ class Shop {
   }
 }
 
-const shop = new Shop();
-shop.addProd();
+class App {
+  
+  static init() {
+    const shop = new Shop();
+    shop.addProd();
+    this.shopp = shop.shopp;
+  }
 
+  static addProductToCart(product) {
+    this.shopp.addProduct(product);
+  }
+}
+
+App.init();
